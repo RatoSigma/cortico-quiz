@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Cortiço — Qual personagem é você?</title>
+  <meta
+    name="description"
+    content="Quiz de personalidade inspirado em O Cortiço, de Aluísio Azevedo."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <div class="page-vignette" aria-hidden="true"></div>
+
+    <section id="start-screen" class="panel screen is-active" aria-labelledby="main-title">
+      <div class="panel-ornament panel-ornament--tl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--tr" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--bl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--br" aria-hidden="true"></div>
+
+      <p class="eyebrow">Quiz Literário</p>
+      <h1 id="main-title">O Cortiço — Qual personagem é você?</h1>
+      <p class="intro-text">
+        Responda 8 perguntas e descubra com qual figura do romance de Aluísio Azevedo
+        sua personalidade mais se parece.
+      </p>
+      <button
+        id="start-button"
+        class="paper-button primary-button"
+        type="button"
+        aria-label="Começar o teste"
+      >
+        Começar o teste
+      </button>
+    </section>
+
+    <section
+      id="quiz-screen"
+      class="panel screen"
+      aria-labelledby="question-title"
+      aria-live="polite"
+      hidden
+    >
+      <div class="panel-ornament panel-ornament--tl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--tr" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--bl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--br" aria-hidden="true"></div>
+
+      <div class="quiz-topbar">
+        <button
+          id="back-button"
+          class="paper-button secondary-button"
+          type="button"
+          aria-label="Voltar para a pergunta anterior"
+        >
+          Voltar
+        </button>
+
+        <div class="progress-block">
+          <p id="progress-text" class="progress-text">Pergunta 1 de 8</p>
+          <div
+            id="progressbar"
+            class="progressbar"
+            role="progressbar"
+            aria-label="Progresso do quiz"
+            aria-valuemin="1"
+            aria-valuemax="8"
+            aria-valuenow="1"
+          >
+            <div id="progress-fill" class="progressbar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <article id="question-card" class="question-card">
+        <p id="question-counter" class="question-counter">Pergunta 1</p>
+        <h2 id="question-title" class="question-title"></h2>
+        <div
+          id="options-list"
+          class="options-list"
+          role="list"
+          aria-label="Alternativas da pergunta atual"
+        ></div>
+      </article>
+    </section>
+
+    <section
+      id="result-screen"
+      class="panel screen"
+      aria-labelledby="result-heading"
+      hidden
+    >
+      <div class="panel-ornament panel-ornament--tl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--tr" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--bl" aria-hidden="true"></div>
+      <div class="panel-ornament panel-ornament--br" aria-hidden="true"></div>
+
+      <p class="eyebrow">Seu Resultado</p>
+      <h2 id="result-heading" tabindex="-1">Você é...</h2>
+
+      <div class="result-layout">
+        <div id="result-visual" class="result-visual"></div>
+
+        <div class="result-content">
+          <h3 id="result-name" class="result-name"></h3>
+          <p id="result-title" class="result-title"></p>
+          <p id="result-description" class="result-description"></p>
+
+          <section class="ranking-section" aria-labelledby="ranking-heading">
+            <h4 id="ranking-heading">Afinidade com todos os personagens</h4>
+            <div id="ranking-list" class="ranking-list"></div>
+          </section>
+
+          <button
+            id="restart-button"
+            class="paper-button primary-button"
+            type="button"
+            aria-label="Refazer o teste"
+          >
+            Refazer o teste
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <noscript>
+    <div class="noscript-warning">
+      Este quiz precisa de JavaScript ativado para funcionar.
+    </div>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
