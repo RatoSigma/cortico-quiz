@@ -206,6 +206,7 @@ const resultTitle = document.querySelector("#result-title");
 const resultDescription = document.querySelector("#result-description");
 const rankingList = document.querySelector("#ranking-list");
 const resultHeading = document.querySelector("#result-heading");
+const fullscreenButton = document.querySelector("#fullscreen-button");
 
 startButton.addEventListener("click", () => startQuiz("start"));
 backButton.addEventListener("click", goBack);
@@ -213,9 +214,65 @@ restartButton.addEventListener("click", () => startQuiz("restart"));
 document.addEventListener("keydown", handleOptionShortcut);
 
 initializeIntro();
+initializeFullscreenButton();
 
 function initializeIntro() {
   showScreen("start");
+}
+
+function initializeFullscreenButton() {
+  if (!fullscreenButton) {
+    return;
+  }
+
+  const canUseFullscreen = Boolean(
+    document.documentElement.requestFullscreen
+      || document.documentElement.webkitRequestFullscreen
+      || document.exitFullscreen
+      || document.webkitExitFullscreen
+  );
+
+  if (!canUseFullscreen) {
+    fullscreenButton.hidden = true;
+    return;
+  }
+
+  fullscreenButton.addEventListener("click", toggleFullscreen);
+  document.addEventListener("fullscreenchange", syncFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", syncFullscreenButton);
+  syncFullscreenButton();
+}
+
+function toggleFullscreen() {
+  const root = document.documentElement;
+  const isFullscreen = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+
+  if (isFullscreen) {
+    const exitMethod = document.exitFullscreen || document.webkitExitFullscreen;
+
+    if (exitMethod) {
+      exitMethod.call(document).catch?.(() => {});
+    }
+
+    return;
+  }
+
+  const requestMethod = root.requestFullscreen || root.webkitRequestFullscreen;
+
+  if (requestMethod) {
+    requestMethod.call(root).catch?.(() => {});
+  }
+}
+
+function syncFullscreenButton() {
+  if (!fullscreenButton) {
+    return;
+  }
+
+  const isFullscreen = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+  fullscreenButton.textContent = isFullscreen ? "Sair da tela cheia" : "Tela cheia";
+  fullscreenButton.setAttribute("aria-label", isFullscreen ? "Sair da tela cheia" : "Ativar tela cheia");
+  fullscreenButton.setAttribute("aria-pressed", String(isFullscreen));
 }
 
 function startQuiz(trigger = "start") {
@@ -225,7 +282,7 @@ function startQuiz(trigger = "start") {
 
   state.currentQuestionIndex = 0;
   state.answers = Array(QUESTIONS.length).fill(null);
-  state.shuffledOptions = QUESTIONS.map((question) => shuffleArray(question.options));
+  state.shuffledOptions = QUESTIONS.map((question) => createShuffledDisplayOptions(question));
   state.isTransitioning = false;
   clearCelebrationEffects();
 
@@ -278,9 +335,9 @@ function renderQuestion(index, { animate }) {
       button.className = "option-button";
       button.dataset.optionId = option.id;
       button.setAttribute("aria-label", `Alternativa ${option.id}: ${option.text}`);
-      button.setAttribute("aria-pressed", String(selectedOptionId === option.id));
+      button.setAttribute("aria-pressed", String(selectedOptionId === option.sourceId));
 
-      if (selectedOptionId === option.id) {
+      if (selectedOptionId === option.sourceId) {
         button.classList.add("is-selected");
       }
 
@@ -289,7 +346,7 @@ function renderQuestion(index, { animate }) {
         <span class="option-text">${option.text}</span>
       `;
 
-      button.addEventListener("click", () => selectOption(option.id, button));
+      button.addEventListener("click", () => selectOption(option.sourceId, button));
       optionsList.appendChild(button);
     });
   };
@@ -529,6 +586,17 @@ function shuffleArray(array) {
   }
 
   return copy;
+}
+
+function createShuffledDisplayOptions(question) {
+  const shuffledOptions = shuffleArray(question.options);
+
+  return question.options.map((option, index) => ({
+    id: option.id,
+    sourceId: shuffledOptions[index].id,
+    text: shuffledOptions[index].text,
+    points: shuffledOptions[index].points
+  }));
 }
 
 function focusFirstOption() {
